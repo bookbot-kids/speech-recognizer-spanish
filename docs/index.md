@@ -29,7 +29,6 @@ A cross platform (Android/iOS/MacOS) Spanish children's speech recognizer librar
 ## Features
 
 - Spanish speech-to-text through a Kaldi-based automatic speech recognition (ASR) model, trained on children's speech.
-- Train custom machine learning model with [model extractor](https://github.com/bookbot-kids/speech-recognizer-spanish/tree/main/model_extractor).
 - Integrate speech-to-text model with mobile and desktop applications.
 
 ## Installation / Setup
@@ -40,8 +39,6 @@ A cross platform (Android/iOS/MacOS) Spanish children's speech recognizer librar
 - Open the project in Visual Studio Code, navigate to `lib/main.dart`.
 - Launch an Android emulator or iOS simulator. Optionaly, you can also connect to a real device.
 - Run the demo on Android/iOS/MacOS by going to the top navigation bar of VSCode, hit **Run**, then **Start Debugging**.
-
-Note Kaldi libraries have been compiled from commit hash `9af2c5c16389e141f527ebde7ee432a0c1df9fb9` with OpenFST v1.7.3.
 
 ### Android
 
@@ -96,19 +93,18 @@ class _MyHomePageState implements SpeechListener { // (1)
     }
   }
 
-  @override
-  void onResult(Map result, bool wasEndpoint) { // (5)
-    List<List<String>> candidates = result.containsKey('partial') // (6)
-        ? [result['partial'].trim().split(' ')]
-        : result['alternatives']
-            .map((x) => x['text'].trim().split(' ').cast<String>().toList())
-            .toList()
-            .cast<List<String>>();
-    if (candidates.isEmpty ||
-        !candidates
-            .any((element) => element.any((element) => element.isNotEmpty))) {
+  /// listen to speech events and print result in UI
+  void onResult(
+    String transcript, bool wasEndpoint, bool resetEndPos,
+    bool isVoiceActive, bool isNoSpeech) {
+    if (transcript.isEmpty) {
       return;
     }
+    
+    print(transcript);
+    setState(() {
+      _decoded.insert(0, transcript);
+    });
   }
 }
 ```
@@ -127,9 +123,16 @@ class _MyHomePageState implements SpeechListener { // (1)
 | Platform      | Code                                                                                                                                                                                                   | Function                                                                                                                                                      |
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Flutter       | [`speech_recognizer.dart`](https://github.com/bookbot-kids/speech-recognizer-spanish/blob/main/speech_recognizer/lib/speech_recognizer.dart)                                                 | Interface API to communicate with native platform (Android/iOS/Mac). There are many speech recognizer methods, check `lib/main.dart` to know how to use them. |
-| All Platforms | [`model-id-id`](https://github.com/bookbot-kids/speech-recognizer-spanish/tree/main/speech_recognizer/android/models/src/main/assets/model-id-id)                                            | Speech model shared for all platforms. Replace `model-id-id/graph` to change the model dictionary.                                                            |
-| iOS/MacOS     | [`SpeechController.swift`](https://github.com/bookbot-kids/speech-recognizer-spanish/blob/main/speech_recognizer/swift/SpeechController.swift)                                               | Native platform channel for speech recognizer on iOS/MacOS. It uses [Vosk](https://github.com/alphacep/vosk-api) with custom model.                           |
-| Android       | [`SpeechController.kt`](https://github.com/bookbot-kids/speech-recognizer-spanish/blob/main/speech_recognizer/android/app/src/main/kotlin/com/bookbot/speech_recognizer/SpeechController.kt) | Native platform channel for speech recognizer on android. It uses [Vosk](https://github.com/alphacep/vosk-api) with custom model.                             |
+| All Platforms | [`asr/es`](https://github.com/bookbot-kids/speech-recognizer-spanish/tree/main/speech_recognizer/android/app/src/main/assets/asr/es)                                            | Speech model shared for all platforms. 
+| iOS/MacOS     | [`SpeechController.swift`](https://github.com/bookbot-kids/speech-recognizer-spanish/blob/main/speech_recognizer/ios/Runner/SpeechController.swift)                                               | Native platform channel for speech recognizer on iOS/MacOS. It uses [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) with custom model.                           |
+| Android       | [`SpeechController.kt`](https://github.com/bookbot-kids/speech-recognizer-spanish/blob/main/speech_recognizer/android/app/src/main/kotlin/com/bookbot/SpeechController.kt) | Native platform channel for speech recognizer on android. It uses [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) with custom model.                             |
+
+## UI Automation Testing
+- Follow [Installation / Setup](#installation--setup) guide
+- Launch an Android emulator or iOS simulator
+- Run `flutter test integration_test/app_test.dart`  
+
+[Watch Integration Test Video](https://github.com/bookbot-kids/speech-recognizer-spanish/raw/main/integration_test.mp4)
 
 ## Helpful Links & Resources
 
@@ -145,4 +148,4 @@ class _MyHomePageState implements SpeechListener { // (1)
 
 ## Credits
 
-[Alpha Cephei/Vosk](https://github.com/alphacep/vosk-api)
+[Sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx)

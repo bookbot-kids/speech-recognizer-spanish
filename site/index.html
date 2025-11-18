@@ -484,6 +484,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ui-automation-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UI Automation Testing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#helpful-links-resources" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -705,6 +716,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ui-automation-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UI Automation Testing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#helpful-links-resources" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -785,7 +807,6 @@
 <h2 id="features">Features</h2>
 <ul>
 <li>Spanish speech-to-text through a Kaldi-based automatic speech recognition (ASR) model, trained on children's speech.</li>
-<li>Train custom machine learning model with <a href="https://github.com/bookbot-kids/speech-recognizer-spanish/tree/main/model_extractor">model extractor</a>.</li>
 <li>Integrate speech-to-text model with mobile and desktop applications.</li>
 </ul>
 <h2 id="installation-setup">Installation / Setup</h2>
@@ -797,7 +818,6 @@
 <li>Launch an Android emulator or iOS simulator. Optionaly, you can also connect to a real device.</li>
 <li>Run the demo on Android/iOS/MacOS by going to the top navigation bar of VSCode, hit <strong>Run</strong>, then <strong>Start Debugging</strong>.</li>
 </ul>
-<p>Note Kaldi libraries have been compiled from commit hash <code>9af2c5c16389e141f527ebde7ee432a0c1df9fb9</code> with OpenFST v1.7.3.</p>
 <h3 id="android">Android</h3>
 <p>On Android, you will need to allow microphone permission in <code>AndroidManifest.xml</code> like so:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">&lt;uses-feature</span><span class="w"> </span><span class="na">android:name=</span><span class="s">&quot;android.hardware.microphone&quot;</span><span class="w"> </span><span class="na">android:required=</span><span class="s">&quot;false&quot;</span><span class="nt">/&gt;</span>
@@ -844,21 +864,20 @@
 <a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">    </span><span class="p">}</span>
 <a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">  </span><span class="p">}</span>
 <a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">  </span><span class="nd">@override</span>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">onResult</span><span class="p">(</span><span class="n">Map</span><span class="w"> </span><span class="n">result</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">wasEndpoint</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// (5)</span>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">candidates</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span><span class="p">.</span><span class="n">containsKey</span><span class="p">(</span><span class="s1">&#39;partial&#39;</span><span class="p">)</span><span class="w"> </span><span class="c1">// (6)</span>
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">        </span><span class="o">?</span><span class="w"> </span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;partial&#39;</span><span class="p">].</span><span class="n">trim</span><span class="p">().</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)]</span>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;alternatives&#39;</span><span class="p">]</span>
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">            </span><span class="p">.</span><span class="n">map</span><span class="p">((</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">].</span><span class="n">trim</span><span class="p">().</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">).</span><span class="n">cast</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="p">().</span><span class="n">toList</span><span class="p">())</span>
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">            </span><span class="p">.</span><span class="n">toList</span><span class="p">()</span>
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="w">            </span><span class="p">.</span><span class="n">cast</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;&gt;</span><span class="p">();</span>
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">candidates</span><span class="p">.</span><span class="n">isEmpty</span><span class="w"> </span><span class="o">||</span>
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="w">        </span><span class="o">!</span><span class="n">candidates</span>
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="w">            </span><span class="p">.</span><span class="n">any</span><span class="p">((</span><span class="n">element</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">element</span><span class="p">.</span><span class="n">any</span><span class="p">((</span><span class="n">element</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">element</span><span class="p">.</span><span class="n">isNotEmpty</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="w">      </span><span class="k">return</span><span class="p">;</span>
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a><span class="p">}</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">  </span><span class="c1">/// listen to speech events and print result in UI</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">onResult</span><span class="p">(</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">    </span><span class="kt">String</span><span class="w"> </span><span class="n">transcript</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">wasEndpoint</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">resetEndPos</span><span class="p">,</span>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">isVoiceActive</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">isNoSpeech</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">transcript</span><span class="p">.</span><span class="n">isEmpty</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">      </span><span class="k">return</span><span class="p">;</span>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="w">    </span><span class="n">print</span><span class="p">(</span><span class="n">transcript</span><span class="p">);</span>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="w">    </span><span class="n">setState</span><span class="p">(()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="w">      </span><span class="n">_decoded</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">transcript</span><span class="p">);</span>
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="w">    </span><span class="p">});</span>
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a><span class="p">}</span>
 </code></pre></div>
 <ol>
 <li>Setup listener by implements <code>SpeechListener</code> in your class.</li>
@@ -887,21 +906,28 @@
 </tr>
 <tr>
 <td>All Platforms</td>
-<td><a href="https://github.com/bookbot-kids/speech-recognizer-spanish/tree/main/speech_recognizer/android/models/src/main/assets/model-id-id"><code>model-id-id</code></a></td>
-<td>Speech model shared for all platforms. Replace <code>model-id-id/graph</code> to change the model dictionary.</td>
+<td><a href="https://github.com/bookbot-kids/speech-recognizer-spanish/tree/main/speech_recognizer/android/app/src/main/assets/asr/es"><code>asr/es</code></a></td>
+<td>Speech model shared for all platforms.</td>
 </tr>
 <tr>
 <td>iOS/MacOS</td>
-<td><a href="https://github.com/bookbot-kids/speech-recognizer-spanish/blob/main/speech_recognizer/swift/SpeechController.swift"><code>SpeechController.swift</code></a></td>
-<td>Native platform channel for speech recognizer on iOS/MacOS. It uses <a href="https://github.com/alphacep/vosk-api">Vosk</a> with custom model.</td>
+<td><a href="https://github.com/bookbot-kids/speech-recognizer-spanish/blob/main/speech_recognizer/ios/Runner/SpeechController.swift"><code>SpeechController.swift</code></a></td>
+<td>Native platform channel for speech recognizer on iOS/MacOS. It uses <a href="https://github.com/k2-fsa/sherpa-onnx">sherpa-onnx</a> with custom model.</td>
 </tr>
 <tr>
 <td>Android</td>
-<td><a href="https://github.com/bookbot-kids/speech-recognizer-spanish/blob/main/speech_recognizer/android/app/src/main/kotlin/com/bookbot/speech_recognizer/SpeechController.kt"><code>SpeechController.kt</code></a></td>
-<td>Native platform channel for speech recognizer on android. It uses <a href="https://github.com/alphacep/vosk-api">Vosk</a> with custom model.</td>
+<td><a href="https://github.com/bookbot-kids/speech-recognizer-spanish/blob/main/speech_recognizer/android/app/src/main/kotlin/com/bookbot/SpeechController.kt"><code>SpeechController.kt</code></a></td>
+<td>Native platform channel for speech recognizer on android. It uses <a href="https://github.com/k2-fsa/sherpa-onnx">sherpa-onnx</a> with custom model.</td>
 </tr>
 </tbody>
 </table>
+<h2 id="ui-automation-testing">UI Automation Testing</h2>
+<ul>
+<li>Follow <a href="#installation--setup">Installation / Setup</a> guide</li>
+<li>Launch an Android emulator or iOS simulator</li>
+<li>Run <code>flutter test integration_test/app_test.dart</code>  </li>
+</ul>
+<p><a href="https://github.com/bookbot-kids/speech-recognizer-spanish/raw/main/integration_test.mp4">Watch Integration Test Video</a></p>
 <h2 id="helpful-links-resources">Helpful Links &amp; Resources</h2>
 <ul>
 <li><a href="https://docs.flutter.dev/">Flutter developer document</a></li>
@@ -913,7 +939,7 @@
   <img src="https://contrib.rocks/image?repo=bookbot-kids/speech-recognizer-spanish" />
 </a></p>
 <h2 id="credits">Credits</h2>
-<p><a href="https://github.com/alphacep/vosk-api">Alpha Cephei/Vosk</a></p>
+<p><a href="https://github.com/k2-fsa/sherpa-onnx">Sherpa-onnx</a></p>
 
 
 
