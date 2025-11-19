@@ -32,6 +32,9 @@ target 'Runner' do
   use_modular_headers!
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+  
+  # ONNX Runtime for machine learning inference
+  pod 'onnxruntime-objc', '1.17.1'
 end
 
 post_install do |installer|

@@ -38,10 +38,6 @@ dependencies:
   path_provider: ^2.1.5
   queue: ^3.4.0
   path: ^1.9.1
-  tts:
-    git:
-      url: git@github.com:bookbot-kids/tts.git
-      ref: feature/opti2
 
 dev_dependencies:
   flutter_test:

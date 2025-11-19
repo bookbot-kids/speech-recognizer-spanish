@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:speech_recognizer/app.dart';
 import 'package:speech_recognizer/speech_recognizer.dart';
@@ -94,6 +96,11 @@ class _MyHomePageState extends State<MyHomePage> {
       });
 
       SpeechController.shared.addListener(onResult);
+    }
+
+    // on iOS and macOS, we start to listen immediately
+    if (Platform.isIOS || Platform.isMacOS) {
+      _recognize();
     }
   }
 

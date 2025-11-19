@@ -17,7 +17,6 @@
 		5200EA4C2C528C3C0063409B /* libc++abi.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5200EA492C528C3C0063409B /* libc++abi.tbd */; };
 		5200EA4D2C528C3C0063409B /* libc.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5200EA4A2C528C3C0063409B /* libc.tbd */; };
 		5286A75E2C520FC70003435C /* SpeechController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5286A75D2C520FC70003435C /* SpeechController.swift */; };
-		52ECFC422C99358700661052 /* MeasureHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52ECFC412C99358700661052 /* MeasureHelper.swift */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
@@ -53,7 +52,6 @@
 		5200EA4E2C528C490063409B /* libc++.1.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.1.tbd"; path = "usr/lib/libc++.1.tbd"; sourceTree = SDKROOT; };
 		5253F3CC2C57EE29009E9F5D /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		5286A75D2C520FC70003435C /* SpeechController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechController.swift; sourceTree = "<group>"; };
-		52ECFC412C99358700661052 /* MeasureHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureHelper.swift; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		792EEF4C8AB64B4720A3B87C /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
@@ -141,7 +139,6 @@
 				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
 				5286A75D2C520FC70003435C /* SpeechController.swift */,
-				52ECFC412C99358700661052 /* MeasureHelper.swift */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -314,7 +311,6 @@
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				5200EA442C528A2E0063409B /* SherpaOnnx.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
-				52ECFC422C99358700661052 /* MeasureHelper.swift in Sources */,
 				5286A75E2C520FC70003435C /* SpeechController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
