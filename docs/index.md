@@ -132,7 +132,7 @@ class _MyHomePageState implements SpeechListener { // (1)
 - Launch an Android emulator or iOS simulator
 - Run `flutter test integration_test/app_test.dart`  
 
-[Watch Integration Test Video](https://github.com/bookbot-kids/speech-recognizer-spanish/raw/main/integration_test.mp4)
+https://github.com/user-attachments/assets/46476c73-cfbb-442d-8e81-3199fe0f704d
 
 ## Helpful Links & Resources
 

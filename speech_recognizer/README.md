@@ -1,16 +1,35 @@
-# speech_recognizer
+# Speech Recognizer
 
-A new Flutter project.
+An Spanish children's speech recognizer Flutter app for Android/iOS/MacOS. It will read buffer from microphone and recognize speaking words.
 
-## Getting Started
+## Installation / Setup
 
-This project is a starting point for a Flutter application.
+- Install [Flutter SDK](https://docs.flutter.dev/get-started/install).
+- Install [Visual Studio Code](https://code.visualstudio.com/).
+- Open the project in Visual Studio Code, navigate to `lib/main.dart`.
+- Launch an Android emulator or iOS simulator. Optionaly, you can also connect to a real device.
+- Run the demo on Android/iOS/MacOS by going to the top navigation bar of VSCode, hit **Run**, then **Start Debugging**.
 
-A few resources to get you started if this is your first Flutter project:
+### Android
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+On Android, you will need to allow microphone permission in `AndroidManifest.xml` like so:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```xml
+<uses-feature android:name="android.hardware.microphone" android:required="false"/>
+<uses-permission android:name="android.permission.RECORD_AUDIO"/>
+```
+
+### iOS
+
+Similarly on iOS/MacOS:
+
+- Open Xcode
+- Navigate to `Info.plist`
+- Add microphone permission `NSMicrophoneUsageDescription`. You can follow this [guide](https://stackoverflow.com/a/38498347/719212).
+
+### UI Automation Testing
+- Follow [Installation / Setup](#installation--setup) guide
+- Launch an Android emulator or iOS simulator
+- Run `flutter test integration_test/app_test.dart`  
+
+https://github.com/user-attachments/assets/46476c73-cfbb-442d-8e81-3199fe0f704d

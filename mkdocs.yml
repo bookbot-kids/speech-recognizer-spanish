@@ -40,4 +40,4 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Contributing: contributing.md
-  - Flutter API: /speech-recognizer-spanish/speech_recognizer/docs/speech_recognizer/doc/api/index.html
+  - Flutter API: speech_recognizer/doc/api/index.html
