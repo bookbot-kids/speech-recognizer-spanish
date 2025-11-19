@@ -72,6 +72,203 @@
 <li>Run <code>flutter test integration_test/app_test.dart</code></li>
 </ul>
 <p><a href="https://github.com/user-attachments/assets/46476c73-cfbb-442d-8e81-3199fe0f704d">https://github.com/user-attachments/assets/46476c73-cfbb-442d-8e81-3199fe0f704d</a></p>
+<h2 id="architecture">Architecture</h2>
+<p>This library uses <strong>Flutter Platform Channels</strong> to enable communication between Dart (Flutter) and native code (Android/iOS). The architecture follows a three-layer design:</p>
+<h3 id="1-flutter-layer-dart">1. Flutter Layer (Dart)</h3>
+<p>The Flutter layer provides a high-level API through the <code>SpeechController</code> class, which communicates with native platforms using:</p>
+<ul>
+<li><strong>Method Channel</strong> (<code>com.bookbot/control</code>): For sending commands to native code</li>
+<li><strong>Event Channel</strong> (<code>com.bookbot/event</code>): For receiving continuous speech recognition results</li>
+</ul>
+<pre class="language-dart"><code class="language-dart">// Example: Flutter sends command to native platform
+await methodChannel.invokeMethod('initSpeech', [language, profileId, wordMode]);
+
+// Example: Flutter receives events from native platform
+eventChannel.receiveBroadcastStream().listen((event) {
+  final transcript = event['transcript'];
+  final wasEndpoint = event['wasEndpoint'];
+  // Process recognition results
+});
+</code></pre>
+<h3 id="2-platform-channel-bridge">2. Platform Channel Bridge</h3>
+<p>Platform channels act as a bridge between Flutter and native code:</p>
+<table>
+<thead>
+<tr>
+<th>Channel Name</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>com.bookbot/control</code></td>
+<td>MethodChannel</td>
+<td>Send commands (init, listen, stop, etc.)</td>
+</tr>
+<tr>
+<td><code>com.bookbot/event</code></td>
+<td>EventChannel</td>
+<td>Receive recognition results continuously</td>
+</tr>
+<tr>
+<td><code>com.bookbot/levels</code></td>
+<td>EventChannel</td>
+<td>Receive audio level updates</td>
+</tr>
+<tr>
+<td><code>com.bookbot/recognizer</code></td>
+<td>EventChannel</td>
+<td>Receive recognizer running status</td>
+</tr>
+</tbody>
+</table>
+<h3 id="3-native-layer-androidios">3. Native Layer (Android/iOS)</h3>
+<h4 id="android-implementation-kotlin">Android Implementation (Kotlin)</h4>
+<p>The Android native code in <code>SpeechController.kt</code> handles:</p>
+<ol>
+<li><strong>Microphone Permission Management</strong>: Requests and checks <code>RECORD_AUDIO</code> permission</li>
+<li><strong>Speech Recognition Service</strong>: Integrates with Sherpa-ONNX ASR engine</li>
+<li><strong>Audio Processing</strong>: Captures audio from microphone using Android's audio APIs</li>
+<li><strong>Real-time Recognition</strong>: Processes audio buffers and sends results back to Flutter</li>
+</ol>
+<pre class="language-kotlin"><code class="language-kotlin">// Android: Registering the plugin
+class MainActivity : FlutterActivity() {
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        speechController = SpeechController(this, lifecycle)
+        flutterEngine.plugins.add(speechController)
+    }
+}
+
+// Android: Handling method calls from Flutter
+override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
+    when (call.method) {
+        "initSpeech" -&gt; initSpeech(call.arguments as List&lt;String?&gt;, result)
+        "listen" -&gt; startSpeech()
+        "stopListening" -&gt; stopSpeech()
+        // ... other methods
+    }
+}
+
+// Android: Sending results back to Flutter
+override fun onSpeechResult(result: String, wasEndpoint: Boolean, ...) {
+    eventSink?.success(hashMapOf(
+        "transcript" to result,
+        "wasEndpoint" to wasEndpoint,
+        "isVoiceActive" to isVoiceActive
+    ))
+}
+</code></pre>
+<h4 id="ios-implementation-swift">iOS Implementation (Swift)</h4>
+<p>The iOS native code in <code>SpeechController.swift</code> handles:</p>
+<ol>
+<li><strong>Audio Session Management</strong>: Configures <code>AVAudioSession</code> for recording</li>
+<li><strong>Audio Engine</strong>: Uses <code>AVAudioEngine</code> to capture microphone input</li>
+<li><strong>Voice Activity Detection (VAD)</strong>: Detects speech vs silence using Sherpa-ONNX VAD</li>
+<li><strong>Speech Recognition</strong>: Processes audio with Sherpa-ONNX ASR model</li>
+</ol>
+<pre class="language-swift"><code class="language-swift">// iOS: Registering the plugin
+public static func register(with registrar: FlutterPluginRegistrar) {
+    let channel = FlutterMethodChannel(
+        name: "com.bookbot/control",
+        binaryMessenger: messenger
+    )
+    registrar.addMethodCallDelegate(instance, channel: channel)
+    
+    let eventChannel = FlutterEventChannel(
+        name: "com.bookbot/event",
+        binaryMessenger: messenger
+    )
+    eventChannel.setStreamHandler(instance)
+}
+
+// iOS: Handling method calls from Flutter
+public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+    switch call.method {
+    case "initSpeech":
+        initSpeech(profileId: profileId, language: language, ...)
+    case "listen":
+        startListening()
+    case "stopListening":
+        stopListening()
+    // ... other methods
+    }
+}
+
+// iOS: Processing audio buffers
+engine.inputNode.installTap(onBus: 0, bufferSize: bufferSize, format: format) { buffer, _ in
+    self.recognize(buffer: buffer)
+}
+</code></pre>
+<h3 id="speech-recognition-flow">Speech Recognition Flow</h3>
+<pre class="language-dart"><code>┌─────────────────────────────────────────────────────────────────┐
+│                        Flutter App (Dart)                        │
+│  ┌───────────────────────────────────────────────────────────┐  │
+│  │          SpeechController.shared.listen()                 │  │
+│  └───────────────────────┬───────────────────────────────────┘  │
+└────────────────────────────┼─────────────────────────────────────┘
+                             │ Method Channel
+                             ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                  Native Platform (Android/iOS)                   │
+│  ┌───────────────────────────────────────────────────────────┐  │
+│  │  1. Request Microphone Permission                         │  │
+│  │  2. Initialize AVAudioEngine/AudioRecord                  │  │
+│  │  3. Load Sherpa-ONNX ASR Model                           │  │
+│  │  4. Start Capturing Audio (100ms buffers)                │  │
+│  └───────────────────────┬───────────────────────────────────┘  │
+│                          │                                       │
+│  ┌───────────────────────▼───────────────────────────────────┐  │
+│  │  Audio Buffer Processing:                                 │  │
+│  │  • Convert to 16kHz PCM Float32                          │  │
+│  │  • Run Voice Activity Detection (VAD)                    │  │
+│  │  • Feed to Sherpa-ONNX Recognizer                        │  │
+│  │  • Decode Speech → Text                                  │  │
+│  └───────────────────────┬───────────────────────────────────┘  │
+│                          │ Event Channel                        │
+└────────────────────────────┼─────────────────────────────────────┘
+                             ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    Flutter App (Dart)                            │
+│  ┌───────────────────────────────────────────────────────────┐  │
+│  │  Receive Results: { transcript, wasEndpoint, ... }        │  │
+│  │  Update UI with recognized text                           │  │
+│  └───────────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="key-technical-details">Key Technical Details</h3>
+<ol>
+<li>
+<p><strong>Audio Processing</strong>:</p>
+<ul>
+<li>Microphone captures raw audio at native sample rate (typically 48kHz)</li>
+<li>Audio is resampled to 16kHz for ASR model compatibility</li>
+<li>Buffer duration: 100ms for optimal latency</li>
+</ul>
+</li>
+<li>
+<p><strong>Voice Activity Detection (VAD)</strong>:</p>
+<ul>
+<li>Uses Silero VAD model with 25ms window size</li>
+<li>Detects speech/silence patterns: <code>[silence][speech][silence]</code></li>
+<li>Patience counters prevent false endpoint detection</li>
+</ul>
+</li>
+<li>
+<p><strong>Recognition Modes</strong>:</p>
+<ul>
+<li><strong>Phoneme Mode</strong>: Returns phonetic tokens for pronunciation analysis</li>
+<li><strong>Word Mode</strong>: Returns complete words for text transcription</li>
+</ul>
+</li>
+<li>
+<p><strong>Thread Safety</strong>:</p>
+<ul>
+<li>Android: Uses coroutines and synchronized blocks</li>
+<li>iOS: Uses dedicated DispatchQueues for recognition, audio, and level processing</li>
+</ul>
+</li>
+</ol>
 </section>
 
 
