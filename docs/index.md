@@ -34,7 +34,6 @@ A cross platform (Android/iOS/MacOS) Spanish children's speech recognizer librar
 ## Installation / Setup
 
 - Install [Flutter SDK](https://docs.flutter.dev/get-started/install).
-- Run `git lfs pull` command.
 - Install [Visual Studio Code](https://code.visualstudio.com/).
 - Open the project in Visual Studio Code, navigate to `lib/main.dart`.
 - Launch an Android emulator or iOS simulator. Optionaly, you can also connect to a real device.
