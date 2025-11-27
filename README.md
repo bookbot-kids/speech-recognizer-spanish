@@ -1,6 +1,6 @@
 # Home
 
-## Children's Speech Recognizer Spanish
+## Spanish Phonemic Speech Recogniser
 
 <p align="center">
     <a href="https://github.com/bookbot-kids/speech-recognizer-spanish/blob/main/LICENSE.md">
@@ -20,15 +20,11 @@
     </a>
 </p>
 
-A cross platform (Android/iOS/MacOS) Spanish children's speech recognizer library, written in Flutter and leveraging the Kaldi framework. The speech recognizer library reads a buffer from a microphone device and converts spoken words into text in near-instant inference time with high accuracy. This library is also extensible to your own custom speech recognition model!
-
-!!! note
-
-    Since our built-in default model was trained on children's speech, it may perform poorly on adult's speech.
+A cross-platform (Android/iOS/MacOS) Spanish phonemic speech recognition library, written in Flutter and leveraging the Kaldi framework. The speech recogniser library reads a buffer from a microphone and converts spoken words into text with near-instant inference time and high accuracy. This library is also extensible to your own custom speech recognition model!
 
 ## Features
 
-- Spanish speech-to-text through a Kaldi-based automatic speech recognition (ASR) model, trained on children's speech.
+- Spanish speech-to-text through a Kaldi-based automatic speech recognition (ASR) model.
 - Integrate speech-to-text model with mobile and desktop applications.
 
 ## Installation / Setup
@@ -36,7 +32,7 @@ A cross platform (Android/iOS/MacOS) Spanish children's speech recognizer librar
 - Install [Flutter SDK](https://docs.flutter.dev/get-started/install).
 - Install [Visual Studio Code](https://code.visualstudio.com/).
 - Open the project in Visual Studio Code, navigate to `lib/main.dart`.
-- Launch an Android emulator or iOS simulator. Optionaly, you can also connect to a real device.
+- Launch an Android emulator or iOS simulator. Optionally, you can also connect to a real device.
 - Run the demo on Android/iOS/MacOS by going to the top navigation bar of VSCode, hit **Run**, then **Start Debugging**.
 
 ### Android
@@ -250,7 +246,7 @@ engine.inputNode.installTap(onBus: 0, bufferSize: bufferSize, format: format) { 
 │                  Native Platform (Android/iOS)                   │
 │  ┌───────────────────────────────────────────────────────────┐  │
 │  │  1. Request Microphone Permission                         │  │
-│  │  2. Initialize AVAudioEngine/AudioRecord                  │  │
+│  │  2. Initialise AVAudioEngine/AudioRecord                  │  │
 │  │  3. Load Sherpa-ONNX ASR Model                           │  │
 │  │  4. Start Capturing Audio (100ms buffers)                │  │
 │  └───────────────────────┬───────────────────────────────────┘  │
@@ -259,7 +255,7 @@ engine.inputNode.installTap(onBus: 0, bufferSize: bufferSize, format: format) { 
 │  │  Audio Buffer Processing:                                 │  │
 │  │  • Convert to 16kHz PCM Float32                          │  │
 │  │  • Run Voice Activity Detection (VAD)                    │  │
-│  │  • Feed to Sherpa-ONNX Recognizer                        │  │
+│  │  • Feed to Sherpa-ONNX Recogniser                        │  │
 │  │  • Decode Speech → Text                                  │  │
 │  └───────────────────────┬───────────────────────────────────┘  │
 │                          │ Event Channel                        │
@@ -269,7 +265,7 @@ engine.inputNode.installTap(onBus: 0, bufferSize: bufferSize, format: format) { 
 │                    Flutter App (Dart)                            │
 │  ┌───────────────────────────────────────────────────────────┐  │
 │  │  Receive Results: { transcript, wasEndpoint, ... }        │  │
-│  │  Update UI with recognized text                           │  │
+│  │  Update UI with recognised text                           │  │
 │  └───────────────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -291,7 +287,7 @@ engine.inputNode.installTap(onBus: 0, bufferSize: bufferSize, format: format) { 
    - **Word Mode**: Returns complete words for text transcription
 
 4. **Thread Safety**:
-   - Android: Uses coroutines and synchronized blocks
+   - Android: Uses coroutines and synchronised blocks
    - iOS: Uses dedicated DispatchQueues for recognition, audio, and level processing
 
 ## File Structure
@@ -300,8 +296,8 @@ engine.inputNode.installTap(onBus: 0, bufferSize: bufferSize, format: format) { 
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Flutter       | [`speech_recognizer.dart`](https://github.com/bookbot-kids/speech-recognizer-spanish/blob/main/speech_recognizer/lib/speech_recognizer.dart)                                                 | Interface API to communicate with native platform (Android/iOS/Mac). There are many speech recognizer methods, check `lib/main.dart` to know how to use them. |
 | All Platforms | [`asr/es`](https://github.com/bookbot-kids/speech-recognizer-spanish/tree/main/speech_recognizer/android/app/src/main/assets/asr/es)                                            | Speech model shared for all platforms. 
-| iOS/MacOS     | [`SpeechController.swift`](https://github.com/bookbot-kids/speech-recognizer-spanish/blob/main/speech_recognizer/ios/Runner/SpeechController.swift)                                               | Native platform channel for speech recognizer on iOS/MacOS. It uses [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) with custom model.                           |
-| Android       | [`SpeechController.kt`](https://github.com/bookbot-kids/speech-recognizer-spanish/blob/main/speech_recognizer/android/app/src/main/kotlin/com/bookbot/SpeechController.kt) | Native platform channel for speech recognizer on android. It uses [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) with custom model.                             |
+| iOS/MacOS     | [`SpeechController.swift`](https://github.com/bookbot-kids/speech-recognizer-spanish/blob/main/speech_recognizer/ios/Runner/SpeechController.swift)                                               | Native platform channel for speech recogniser on iOS/MacOS. It uses [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) with a custom model.                           |
+| Android       | [`SpeechController.kt`](https://github.com/bookbot-kids/speech-recognizer-spanish/blob/main/speech_recognizer/android/app/src/main/kotlin/com/bookbot/SpeechController.kt) | Native platform channel for speech recognizer on android. It uses [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) with a custom model.                             |
 
 ## UI Automation Testing
 - Follow [Installation / Setup](#installation--setup) guide
