@@ -20,12 +20,12 @@
     </a>
 </p>
 
-A cross-platform (Android/iOS/MacOS) Spanish phonemic speech recognition library, written in Flutter and leveraging the Kaldi framework. The speech recogniser library reads a buffer from a microphone and converts spoken words into text with near-instant inference time and high accuracy. This library is also extensible to your own custom speech recognition model!
+A cross-platform (Android/iOS/MacOS) Spanish phonemic speech recognition library, written in Flutter and leveraging the Kaldi framework. The speech recogniser library reads a buffer from a microphone and converts spoken words into phonemes with near-instant inference time and high accuracy. This library is also extensible to your own custom speech recognition model!
 
 ## Features
 
 - Spanish speech-to-text through a Kaldi-based automatic speech recognition (ASR) model.
-- Integrate speech-to-text model with mobile and desktop applications.
+- Integrate speech-to-phoneme model with mobile and desktop applications.
 
 ## Installation / Setup
 
