@@ -35,6 +35,7 @@ limitations under the License.
 /// await controller.init();
 /// await controller.listen();
 /// ```
+// ignore: unnecessary_library_name
 library speech_recognizer;
 
 import 'dart:async';
@@ -106,6 +107,12 @@ class SpeechController {
 
   final _NativeSpeechController _controller = _NativeSpeechController();
   final listeners = <SpeechListener>[];
+
+  /// Resets the shared controller singleton for isolated unit tests.
+  @visibleForTesting
+  static void resetSharedForTesting() {
+    shared = SpeechController._privateConstructor();
+  }
 
   /// Initializes the speech recognition system.
   ///

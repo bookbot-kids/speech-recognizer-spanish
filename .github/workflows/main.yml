@@ -10,11 +10,24 @@ jobs:
     steps:
       - name: Checkout master branch
         uses: actions/checkout@v2
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
           python-version: 3.x
       - name: Install dependencies
         run: pip install mkdocs-material
+      - name: Install Flutter dependencies
+        working-directory: speech_recognizer
+        run: flutter pub get
+      - name: Analyze Flutter app
+        working-directory: speech_recognizer
+        run: flutter analyze
+      - name: Run Flutter tests
+        working-directory: speech_recognizer
+        run: flutter test
       - name: Deploy docs
         run: mkdocs gh-deploy --force

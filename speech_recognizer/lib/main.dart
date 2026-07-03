@@ -91,6 +91,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (!_isInitialized) {
       await SpeechController.shared.initSpeech(language: AppConfigs.language);
+      if (!mounted) {
+        return;
+      }
       setState(() {
         _isInitialized = true;
       });
@@ -112,6 +115,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> _recognize() async {
     await SpeechController.shared.flushSpeech();
     await SpeechController.shared.listen();
+    if (!mounted) {
+      return;
+    }
     setState(() {
       _listening = true;
     });
@@ -122,6 +128,9 @@ class _MyHomePageState extends State<MyHomePage> {
     if (_isInitialized) {
       await SpeechController.shared.stopListening();
 
+      if (!mounted) {
+        return;
+      }
       setState(() {
         _listening = false;
       });
