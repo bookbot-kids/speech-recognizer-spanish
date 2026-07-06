@@ -1,8 +1,8 @@
-🌐 **English** • [Español](README.es.md)
+🌐 [English](README.md) • **Español**
 
-# Home
+# Inicio
 
-## Spanish Phonemic Speech Recogniser
+## Reconocedor Fonémico de Habla en Español
 
 <p align="center">
     <a href="https://github.com/bookbot-kids/speech-recognizer-spanish/blob/main/LICENSE.md">
@@ -22,24 +22,24 @@
     </a>
 </p>
 
-A cross-platform (Android/iOS/MacOS) Spanish phonemic speech recognition library, written in Flutter and leveraging the Kaldi framework. The speech recogniser library reads a buffer from a microphone and converts spoken words into phonemes with near-instant inference time and high accuracy. This library is also extensible to your own custom speech recognition model!
+Una biblioteca multiplataforma (Android/iOS/MacOS) de reconocimiento fonémico de habla en español, escrita en Flutter y que aprovecha el framework Kaldi. La biblioteca de reconocimiento de habla lee un búfer desde un micrófono y convierte las palabras habladas en fonemas con un tiempo de inferencia casi instantáneo y alta precisión. ¡Esta biblioteca también es extensible a tu propio modelo personalizado de reconocimiento de habla!
 
-## Features
+## Características
 
-- Spanish speech-to-text through a Kaldi-based automatic speech recognition (ASR) model.
-- Integrate speech-to-phoneme model with mobile and desktop applications.
+- Reconocimiento de voz a texto en español mediante un modelo de reconocimiento automático de habla (ASR) basado en Kaldi.
+- Integra el modelo de habla a fonema con aplicaciones móviles y de escritorio.
 
-## Installation / Setup
+## Instalación / Configuración
 
-- Install [Flutter SDK](https://docs.flutter.dev/get-started/install).
-- Install [Visual Studio Code](https://code.visualstudio.com/).
-- Open the project in Visual Studio Code, navigate to `lib/main.dart`.
-- Launch an Android emulator or iOS simulator. Optionally, you can also connect to a real device.
-- Run the demo on Android/iOS/MacOS by going to the top navigation bar of VSCode, hit **Run**, then **Start Debugging**.
+- Instala el [SDK de Flutter](https://docs.flutter.dev/get-started/install).
+- Instala [Visual Studio Code](https://code.visualstudio.com/).
+- Abre el proyecto en Visual Studio Code y navega a `lib/main.dart`.
+- Inicia un emulador de Android o un simulador de iOS. Opcionalmente, también puedes conectar un dispositivo real.
+- Ejecuta la demo en Android/iOS/MacOS yendo a la barra de navegación superior de VSCode, presiona **Run** y luego **Start Debugging**.
 
 ### Android
 
-On Android, you will need to allow microphone permission in `AndroidManifest.xml` like so:
+En Android, deberás permitir el permiso del micrófono en `AndroidManifest.xml` de la siguiente manera:
 
 ```xml
 <uses-feature android:name="android.hardware.microphone" android:required="false"/>
@@ -48,19 +48,19 @@ On Android, you will need to allow microphone permission in `AndroidManifest.xml
 
 ### iOS
 
-Similarly on iOS/MacOS:
+De forma similar en iOS/MacOS:
 
-- Open Xcode
-- Navigate to `Info.plist`
-- Add microphone permission `NSMicrophoneUsageDescription`. You can follow this [guide](https://stackoverflow.com/a/38498347/719212).
+- Abre Xcode
+- Navega a `Info.plist`
+- Agrega el permiso del micrófono `NSMicrophoneUsageDescription`. Puedes seguir esta [guía](https://stackoverflow.com/a/38498347/719212).
 
-## How to Use
+## Cómo Usar
 
-### Flutter Sample App
+### Aplicación de Ejemplo en Flutter
 
-- After setting up, run the app by pressing the `Load model` button and then `Start listening`
-- Speak into the microphone and the corresponding output text will be displayed in the text field.
-- Press `Stop listening` to stop the app from listening.
+- Después de la configuración, ejecuta la aplicación presionando el botón `Load model` y luego `Start listening`.
+- Habla al micrófono y el texto de salida correspondiente se mostrará en el campo de texto.
+- Presiona `Stop listening` para que la aplicación deje de escuchar.
 
 ```dart title="main.dart"
 import 'package:speech_recognizer/speech_recognizer.dart';
@@ -106,25 +106,25 @@ class _MyHomePageState implements SpeechListener { // (1)
 }
 ```
 
-1. Setup listener by implements `SpeechListener` in your class.
-2. Ask for recording permission.
-3. Initialize Spanish recognizer model.
-4. Register listener in this class.
-5. Output text listener while speaking.
-6. Normalized result.
+1. Configura el listener implementando `SpeechListener` en tu clase.
+2. Solicita el permiso de grabación.
+3. Inicializa el modelo de reconocimiento en español.
+4. Registra el listener en esta clase.
+5. Listener de texto de salida mientras se habla.
+6. Resultado normalizado.
 
 <!-- TODO: add other platforms -->
 
-## Architecture
+## Arquitectura
 
-This library uses **Flutter Platform Channels** to enable communication between Dart (Flutter) and native code (Android/iOS). The architecture follows a three-layer design:
+Esta biblioteca usa **Flutter Platform Channels** para permitir la comunicación entre Dart (Flutter) y el código nativo (Android/iOS). La arquitectura sigue un diseño de tres capas:
 
-### 1. Flutter Layer (Dart)
+### 1. Capa de Flutter (Dart)
 
-The Flutter layer provides a high-level API through the `SpeechController` class, which communicates with native platforms using:
+La capa de Flutter proporciona una API de alto nivel a través de la clase `SpeechController`, que se comunica con las plataformas nativas usando:
 
-- **Method Channel** (`com.bookbot/control`): For sending commands to native code
-- **Event Channel** (`com.bookbot/event`): For receiving continuous speech recognition results
+- **Method Channel** (`com.bookbot/control`): Para enviar comandos al código nativo.
+- **Event Channel** (`com.bookbot/event`): Para recibir resultados continuos del reconocimiento de habla.
 
 ```dart
 // Example: Flutter sends command to native platform
@@ -138,27 +138,27 @@ eventChannel.receiveBroadcastStream().listen((event) {
 });
 ```
 
-### 2. Platform Channel Bridge
+### 2. Puente de Platform Channel
 
-Platform channels act as a bridge between Flutter and native code:
+Los platform channels actúan como un puente entre Flutter y el código nativo:
 
-| Channel Name | Type | Purpose |
+| Nombre del Canal | Tipo | Propósito |
 |-------------|------|---------|
-| `com.bookbot/control` | MethodChannel | Send commands (init, listen, stop, etc.) |
-| `com.bookbot/event` | EventChannel | Receive recognition results continuously |
-| `com.bookbot/levels` | EventChannel | Receive audio level updates |
-| `com.bookbot/recognizer` | EventChannel | Receive recognizer running status |
+| `com.bookbot/control` | MethodChannel | Enviar comandos (init, listen, stop, etc.) |
+| `com.bookbot/event` | EventChannel | Recibir resultados de reconocimiento continuamente |
+| `com.bookbot/levels` | EventChannel | Recibir actualizaciones del nivel de audio |
+| `com.bookbot/recognizer` | EventChannel | Recibir el estado de ejecución del reconocedor |
 
-### 3. Native Layer (Android/iOS)
+### 3. Capa Nativa (Android/iOS)
 
-#### Android Implementation (Kotlin)
+#### Implementación en Android (Kotlin)
 
-The Android native code in `SpeechController.kt` handles:
+El código nativo de Android en `SpeechController.kt` gestiona:
 
-1. **Microphone Permission Management**: Requests and checks `RECORD_AUDIO` permission
-2. **Speech Recognition Service**: Integrates with Sherpa-ONNX ASR engine
-3. **Audio Processing**: Captures audio from microphone using Android's audio APIs
-4. **Real-time Recognition**: Processes audio buffers and sends results back to Flutter
+1. **Gestión de Permisos del Micrófono**: Solicita y verifica el permiso `RECORD_AUDIO`.
+2. **Servicio de Reconocimiento de Habla**: Se integra con el motor ASR Sherpa-ONNX.
+3. **Procesamiento de Audio**: Captura audio del micrófono usando las APIs de audio de Android.
+4. **Reconocimiento en Tiempo Real**: Procesa búferes de audio y envía los resultados de vuelta a Flutter.
 
 ```kotlin
 // Android: Registering the plugin
@@ -189,14 +189,14 @@ override fun onSpeechResult(result: String, wasEndpoint: Boolean, ...) {
 }
 ```
 
-#### iOS Implementation (Swift)
+#### Implementación en iOS (Swift)
 
-The iOS native code in `SpeechController.swift` handles:
+El código nativo de iOS en `SpeechController.swift` gestiona:
 
-1. **Audio Session Management**: Configures `AVAudioSession` for recording
-2. **Audio Engine**: Uses `AVAudioEngine` to capture microphone input
-3. **Voice Activity Detection (VAD)**: Detects speech vs silence using Sherpa-ONNX VAD
-4. **Speech Recognition**: Processes audio with Sherpa-ONNX ASR model
+1. **Gestión de la Sesión de Audio**: Configura `AVAudioSession` para la grabación.
+2. **Motor de Audio**: Usa `AVAudioEngine` para capturar la entrada del micrófono.
+3. **Detección de Actividad de Voz (VAD)**: Detecta habla frente a silencio usando el VAD de Sherpa-ONNX.
+4. **Reconocimiento de Habla**: Procesa el audio con el modelo ASR de Sherpa-ONNX.
 
 ```swift
 // iOS: Registering the plugin
@@ -233,7 +233,7 @@ engine.inputNode.installTap(onBus: 0, bufferSize: bufferSize, format: format) { 
 }
 ```
 
-### Speech Recognition Flow
+### Flujo de Reconocimiento de Habla
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -272,55 +272,57 @@ engine.inputNode.installTap(onBus: 0, bufferSize: bufferSize, format: format) { 
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Key Technical Details
+### Detalles Técnicos Clave
 
-1. **Audio Processing**:
-   - Microphone captures raw audio at native sample rate (typically 48kHz)
-   - Audio is resampled to 16kHz for ASR model compatibility
-   - Buffer duration: 100ms for optimal latency
+1. **Procesamiento de Audio**:
+   - El micrófono captura audio sin procesar a la frecuencia de muestreo nativa (típicamente 48kHz).
+   - El audio se remuestrea a 16kHz para compatibilidad con el modelo ASR.
+   - Duración del búfer: 100ms para una latencia óptima.
 
-2. **Voice Activity Detection (VAD)**:
-   - Uses Silero VAD model with 25ms window size
-   - Detects speech/silence patterns: `[silence][speech][silence]`
-   - Patience counters prevent false endpoint detection
+2. **Detección de Actividad de Voz (VAD)**:
+   - Usa el modelo Silero VAD con un tamaño de ventana de 25ms.
+   - Detecta patrones de habla/silencio: `[silencio][habla][silencio]`.
+   - Los contadores de paciencia evitan la detección falsa de endpoints.
 
-3. **Recognition Modes**:
-   - **Phoneme Mode**: Returns phonetic tokens for pronunciation analysis
-   - **Word Mode**: Returns complete words for text transcription
+3. **Modos de Reconocimiento**:
+   - **Modo Fonema**: Devuelve tokens fonéticos para el análisis de la pronunciación.
+   - **Modo Palabra**: Devuelve palabras completas para la transcripción de texto.
 
-4. **Thread Safety**:
-   - Android: Uses coroutines and synchronised blocks
-   - iOS: Uses dedicated DispatchQueues for recognition, audio, and level processing
+4. **Seguridad de Hilos**:
+   - Android: Usa corrutinas y bloques sincronizados.
+   - iOS: Usa `DispatchQueue` dedicadas para el reconocimiento, el audio y el procesamiento de niveles.
 
-## File Structure
+## Estructura de Archivos
 
-| Platform      | Code                                                                                                                                                                                                   | Function                                                                                                                                                      |
+| Plataforma    | Código                                                                                                                                                                                                 | Función                                                                                                                                                       |
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Flutter       | [`speech_recognizer.dart`](https://github.com/bookbot-kids/speech-recognizer-spanish/blob/main/speech_recognizer/lib/speech_recognizer.dart)                                                 | Interface API to communicate with native platform (Android/iOS/Mac). There are many speech recognizer methods, check `lib/main.dart` to know how to use them. |
-| All Platforms | [`asr/es`](https://github.com/bookbot-kids/speech-recognizer-spanish/tree/main/speech_recognizer/android/app/src/main/assets/asr/es)                                            | Speech model shared for all platforms. 
-| iOS/MacOS     | [`SpeechController.swift`](https://github.com/bookbot-kids/speech-recognizer-spanish/blob/main/speech_recognizer/ios/Runner/SpeechController.swift)                                               | Native platform channel for speech recogniser on iOS/MacOS. It uses [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) with a custom model.                           |
-| Android       | [`SpeechController.kt`](https://github.com/bookbot-kids/speech-recognizer-spanish/blob/main/speech_recognizer/android/app/src/main/kotlin/com/bookbot/SpeechController.kt) | Native platform channel for speech recognizer on android. It uses [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) with a custom model.                             |
+| Flutter       | [`speech_recognizer.dart`](https://github.com/bookbot-kids/speech-recognizer-spanish/blob/main/speech_recognizer/lib/speech_recognizer.dart)                                                 | API de interfaz para comunicarse con la plataforma nativa (Android/iOS/Mac). Hay muchos métodos del reconocedor de habla; revisa `lib/main.dart` para saber cómo usarlos. |
+| Todas las Plataformas | [`asr/es`](https://github.com/bookbot-kids/speech-recognizer-spanish/tree/main/speech_recognizer/android/app/src/main/assets/asr/es)                                            | Modelo de habla compartido para todas las plataformas. 
+| iOS/MacOS     | [`SpeechController.swift`](https://github.com/bookbot-kids/speech-recognizer-spanish/blob/main/speech_recognizer/ios/Runner/SpeechController.swift)                                               | Platform channel nativo para el reconocedor de habla en iOS/MacOS. Usa [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) con un modelo personalizado.                           |
+| Android       | [`SpeechController.kt`](https://github.com/bookbot-kids/speech-recognizer-spanish/blob/main/speech_recognizer/android/app/src/main/kotlin/com/bookbot/SpeechController.kt) | Platform channel nativo para el reconocedor de habla en Android. Usa [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) con un modelo personalizado.                             |
 
-## UI Automation Testing
-- Follow [Installation / Setup](#installation--setup) guide
-- Launch an Android emulator or iOS simulator
-- Run `flutter test integration_test/app_test.dart`  
+## Pruebas de Automatización de UI
+- Sigue la guía de [Instalación / Configuración](#instalación--configuración)
+- Inicia un emulador de Android o un simulador de iOS
+- Ejecuta `flutter test integration_test/app_test.dart`  
 
 https://github.com/user-attachments/assets/46476c73-cfbb-442d-8e81-3199fe0f704d
 
-## Helpful Links & Resources
+## Enlaces y Recursos Útiles
 
-- [Flutter developer document](https://docs.flutter.dev/)
-- [Android developer document](https://developer.android.com/docs)
-- [iOS/MacOS developer document](https://developer.apple.com/documentation/)
+- [Documentación para desarrolladores de Flutter](https://docs.flutter.dev/)
+- [Documentación para desarrolladores de Android](https://developer.android.com/docs)
+- [Documentación para desarrolladores de iOS/MacOS](https://developer.apple.com/documentation/)
 
-## Contributors
+## Contribuidores
 
 <a href="https://github.com/bookbot-kids/speech-recognizer-spanish/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=bookbot-kids/speech-recognizer-spanish" />
 </a>
 
-## Credits
+## Créditos
 
 [Sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx)
 [Onnxruntime](https://github.com/microsoft/onnxruntime)
+</content>
+</invoke>
