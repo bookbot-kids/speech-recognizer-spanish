@@ -25,13 +25,15 @@ Contributors should run the same checks locally before opening a pull request:
 cd speech_recognizer
 flutter pub get
 flutter analyze
-flutter test
+flutter test --coverage
 cd ..
 mkdocs build --strict
 ```
 
 The GitHub Pages workflow also executes the automated Flutter test suite before
-publishing the documentation site. A failed test run blocks the documentation
+publishing the documentation site. It writes line coverage to the GitHub Actions
+job summary and uploads `speech_recognizer/coverage/lcov.info` as a workflow
+artifact. A failed test run or missing coverage report blocks the documentation
 deployment.
 
 Integration tests that exercise real model loading or audio recognition should
@@ -43,7 +45,6 @@ Before merging changes, maintainers should confirm:
 
 - Public documentation is updated when setup, behavior, or APIs change.
 - Flutter analyzer checks pass.
-- Flutter tests pass.
+- Flutter tests pass with coverage generated.
 - Device or simulator integration testing is completed for recognizer changes.
 - MkDocs builds successfully with strict validation.
-

@@ -4,6 +4,8 @@ on:
     branches:
       - master
       - main
+permissions:
+  contents: write
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -26,8 +28,37 @@ jobs:
       - name: Analyze Flutter app
         working-directory: speech_recognizer
         run: flutter analyze
-      - name: Run Flutter tests
+      - name: Run Flutter tests with coverage
         working-directory: speech_recognizer
-        run: flutter test
+        run: flutter test --coverage
+      - name: Report coverage
+        working-directory: speech_recognizer
+        run: |
+          if [ ! -f coverage/lcov.info ]; then
+            echo "coverage/lcov.info was not generated" >&2
+            exit 1
+          fi
+
+          lines_found=$(awk -F: '/^LF:/ { total += $2 } END { print total + 0 }' coverage/lcov.info)
+          lines_hit=$(awk -F: '/^LH:/ { total += $2 } END { print total + 0 }' coverage/lcov.info)
+          coverage_percent=$(awk "BEGIN { if ($lines_found == 0) printf \"0.00\"; else printf \"%.2f\", ($lines_hit / $lines_found) * 100 }")
+
+          {
+            echo "## Test Coverage"
+            echo ""
+            echo "| Metric | Value |"
+            echo "| --- | ---: |"
+            echo "| Lines hit | $lines_hit |"
+            echo "| Lines found | $lines_found |"
+            echo "| Line coverage | ${coverage_percent}% |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          echo "Line coverage: ${coverage_percent}% (${lines_hit}/${lines_found})"
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: speech-recognizer-spanish-lcov
+          path: speech_recognizer/coverage/lcov.info
+          if-no-files-found: error
       - name: Deploy docs
         run: mkdocs gh-deploy --force
