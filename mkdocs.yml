@@ -41,5 +41,6 @@ nav:
   - Home: index.md
   - Contributing: contributing.md
   - Open Source QA: open-source-qa.md
+  - Coverage: coverage.md
   - Project Board: project-board.md
   - Flutter API: speech_recognizer/doc/api/index.html

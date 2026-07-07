@@ -11,6 +11,9 @@
     <a href="https://bookbot-kids.github.io/speech-recognizer-spanish/">
         <img alt="Documentation" src="https://img.shields.io/website/http/bookbot-kids.github.io/speech-recognizer-spanish.svg?down_color=red&down_message=offline&up_message=online">
     </a>
+    <a href="https://bookbot-kids.github.io/speech-recognizer-spanish/coverage/">
+        <img alt="test coverage" src="https://img.shields.io/endpoint?url=https://bookbot-kids.github.io/speech-recognizer-spanish/coverage.json">
+    </a>
     <a href="https://github.com/bookbot-kids/speech-recognizer-spanish/blob/main/CODE_OF_CONDUCT.md">
         <img alt="Contributor Covenant" src="https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg">
     </a>

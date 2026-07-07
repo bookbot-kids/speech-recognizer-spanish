@@ -32,16 +32,26 @@ jobs:
         working-directory: speech_recognizer
         run: flutter test --coverage
       - name: Report coverage
-        working-directory: speech_recognizer
         run: |
-          if [ ! -f coverage/lcov.info ]; then
-            echo "coverage/lcov.info was not generated" >&2
+          if [ ! -f speech_recognizer/coverage/lcov.info ]; then
+            echo "speech_recognizer/coverage/lcov.info was not generated" >&2
             exit 1
           fi
 
-          lines_found=$(awk -F: '/^LF:/ { total += $2 } END { print total + 0 }' coverage/lcov.info)
-          lines_hit=$(awk -F: '/^LH:/ { total += $2 } END { print total + 0 }' coverage/lcov.info)
+          lines_found=$(awk -F: '/^LF:/ { total += $2 } END { print total + 0 }' speech_recognizer/coverage/lcov.info)
+          lines_hit=$(awk -F: '/^LH:/ { total += $2 } END { print total + 0 }' speech_recognizer/coverage/lcov.info)
           coverage_percent=$(awk "BEGIN { if ($lines_found == 0) printf \"0.00\"; else printf \"%.2f\", ($lines_hit / $lines_found) * 100 }")
+          q2_target="15.00"
+          target_status=$(awk "BEGIN { print ($coverage_percent >= $q2_target) ? \"passed\" : \"failed\" }")
+          badge_color=$(awk "BEGIN {
+            if ($coverage_percent >= 80) print \"brightgreen\";
+            else if ($coverage_percent >= 60) print \"green\";
+            else if ($coverage_percent >= 40) print \"yellow\";
+            else if ($coverage_percent >= 20) print \"orange\";
+            else print \"red\";
+          }")
+          generated_at=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          run_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
 
           {
             echo "## Test Coverage"
@@ -51,7 +61,35 @@ jobs:
             echo "| Lines hit | $lines_hit |"
             echo "| Lines found | $lines_found |"
             echo "| Line coverage | ${coverage_percent}% |"
+            echo "| Q2 target | >= ${q2_target}% |"
+            echo "| Target status | ${target_status} |"
           } >> "$GITHUB_STEP_SUMMARY"
+
+          mkdir -p docs
+          cat > docs/coverage.md <<EOF
+          # Test Coverage
+
+          Latest CI line coverage is **${coverage_percent}%** (${lines_hit}/${lines_found} lines).
+
+          | Metric | Value |
+          | --- | ---: |
+          | Lines hit | ${lines_hit} |
+          | Lines found | ${lines_found} |
+          | Line coverage | ${coverage_percent}% |
+          | Q2 target | >= ${q2_target}% |
+          | Target status | ${target_status} |
+
+          Generated from [GitHub Actions run](${run_url}) at ${generated_at}.
+          EOF
+
+          cat > docs/coverage.json <<EOF
+          {
+            "schemaVersion": 1,
+            "label": "coverage",
+            "message": "${coverage_percent}%",
+            "color": "${badge_color}"
+          }
+          EOF
 
           echo "Line coverage: ${coverage_percent}% (${lines_hit}/${lines_found})"
       - name: Upload coverage artifact
