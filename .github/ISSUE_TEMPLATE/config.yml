@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Documentation
+    url: https://bookbot-kids.github.io/speech-recognizer-spanish/
+    about: Check the public documentation before opening an issue.
+  - name: Contributing guidelines
+    url: https://github.com/bookbot-kids/speech-recognizer-spanish/blob/main/CONTRIBUTING.md
+    about: Read the contribution process before submitting changes.
