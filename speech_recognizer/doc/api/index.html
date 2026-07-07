@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="speech_recognizer API docs, for the Dart programming language.">
+  <title>speech_recognizer - Dart API docs</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="static-assets/github.css?v1">
+  <link rel="stylesheet" href="static-assets/styles.css?v1">
+  <link rel="icon" href="static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li class="self-crumb">speech_recognizer package</li>
+  </ol>
+  <div class="self-name">speech_recognizer</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
+</header>
+<main>
+  <div id="dartdoc-main-content" class="main-content">
+      
+<section class="desc markdown">
+  <h1 id="speech-recognizer">Speech Recognizer</h1>
+<p>An Spanish children's speech recognizer Flutter app for Android/iOS/MacOS. It will read buffer from microphone and recognize speaking words.</p>
+<h2 id="installation--setup">Installation / Setup</h2>
+<ul>
+<li>Install <a href="https://docs.flutter.dev/get-started/install">Flutter SDK</a>.</li>
+<li>Install <a href="https://code.visualstudio.com/">Visual Studio Code</a>.</li>
+<li>Open the project in Visual Studio Code, navigate to <code>lib/main.dart</code>.</li>
+<li>Launch an Android emulator or iOS simulator. Optionaly, you can also connect to a real device.</li>
+<li>Run the demo on Android/iOS/MacOS by going to the top navigation bar of VSCode, hit <strong>Run</strong>, then <strong>Start Debugging</strong>.</li>
+</ul>
+<h3 id="android">Android</h3>
+<p>On Android, you will need to allow microphone permission in <code>AndroidManifest.xml</code> like so:</p>
+<pre class="language-xml"><code class="language-xml">&lt;uses-feature android:name="android.hardware.microphone" android:required="false"/&gt;
+&lt;uses-permission android:name="android.permission.RECORD_AUDIO"/&gt;
+</code></pre>
+<h3 id="ios">iOS</h3>
+<p>Similarly on iOS/MacOS:</p>
+<ul>
+<li>Open Xcode</li>
+<li>Navigate to <code>Info.plist</code></li>
+<li>Add microphone permission <code>NSMicrophoneUsageDescription</code>. You can follow this <a href="https://stackoverflow.com/a/38498347/719212">guide</a>.</li>
+</ul>
+<h3 id="ui-automation-testing">UI Automation Testing</h3>
+<ul>
+<li>Follow <a href="#installation--setup">Installation / Setup</a> guide</li>
+<li>Launch an Android emulator or iOS simulator</li>
+<li>Run <code>flutter test integration_test/app_test.dart</code></li>
+</ul>
+<p><a href="https://github.com/user-attachments/assets/46476c73-cfbb-442d-8e81-3199fe0f704d">https://github.com/user-attachments/assets/46476c73-cfbb-442d-8e81-3199fe0f704d</a></p>
+<h2 id="architecture">Architecture</h2>
+<p>This library uses <strong>Flutter Platform Channels</strong> to enable communication between Dart (Flutter) and native code (Android/iOS). The architecture follows a three-layer design:</p>
+<h3 id="1-flutter-layer-dart">1. Flutter Layer (Dart)</h3>
+<p>The Flutter layer provides a high-level API through the <code>SpeechController</code> class, which communicates with native platforms using:</p>
+<ul>
+<li><strong>Method Channel</strong> (<code>com.bookbot/control</code>): For sending commands to native code</li>
+<li><strong>Event Channel</strong> (<code>com.bookbot/event</code>): For receiving continuous speech recognition results</li>
+</ul>
+<pre class="language-dart"><code class="language-dart">// Example: Flutter sends command to native platform
+await methodChannel.invokeMethod('initSpeech', [language, profileId, wordMode]);
+
+// Example: Flutter receives events from native platform
+eventChannel.receiveBroadcastStream().listen((event) {
+  final transcript = event['transcript'];
+  final wasEndpoint = event['wasEndpoint'];
+  // Process recognition results
+});
+</code></pre>
+<h3 id="2-platform-channel-bridge">2. Platform Channel Bridge</h3>
+<p>Platform channels act as a bridge between Flutter and native code:</p>
+<table>
+<thead>
+<tr>
+<th>Channel Name</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>com.bookbot/control</code></td>
+<td>MethodChannel</td>
+<td>Send commands (init, listen, stop, etc.)</td>
+</tr>
+<tr>
+<td><code>com.bookbot/event</code></td>
+<td>EventChannel</td>
+<td>Receive recognition results continuously</td>
+</tr>
+<tr>
+<td><code>com.bookbot/levels</code></td>
+<td>EventChannel</td>
+<td>Receive audio level updates</td>
+</tr>
+<tr>
+<td><code>com.bookbot/recognizer</code></td>
+<td>EventChannel</td>
+<td>Receive recognizer running status</td>
+</tr>
+</tbody>
+</table>
+<h3 id="3-native-layer-androidios">3. Native Layer (Android/iOS)</h3>
+<h4 id="android-implementation-kotlin">Android Implementation (Kotlin)</h4>
+<p>The Android native code in <code>SpeechController.kt</code> handles:</p>
+<ol>
+<li><strong>Microphone Permission Management</strong>: Requests and checks <code>RECORD_AUDIO</code> permission</li>
+<li><strong>Speech Recognition Service</strong>: Integrates with Sherpa-ONNX ASR engine</li>
+<li><strong>Audio Processing</strong>: Captures audio from microphone using Android's audio APIs</li>
+<li><strong>Real-time Recognition</strong>: Processes audio buffers and sends results back to Flutter</li>
+</ol>
+<pre class="language-kotlin"><code class="language-kotlin">// Android: Registering the plugin
+class MainActivity : FlutterActivity() {
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        speechController = SpeechController(this, lifecycle)
+        flutterEngine.plugins.add(speechController)
+    }
+}
+
+// Android: Handling method calls from Flutter
+override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
+    when (call.method) {
+        "initSpeech" -&gt; initSpeech(call.arguments as List&lt;String?&gt;, result)
+        "listen" -&gt; startSpeech()
+        "stopListening" -&gt; stopSpeech()
+        // ... other methods
+    }
+}
+
+// Android: Sending results back to Flutter
+override fun onSpeechResult(result: String, wasEndpoint: Boolean, ...) {
+    eventSink?.success(hashMapOf(
+        "transcript" to result,
+        "wasEndpoint" to wasEndpoint,
+        "isVoiceActive" to isVoiceActive
+    ))
+}
+</code></pre>
+<h4 id="ios-implementation-swift">iOS Implementation (Swift)</h4>
+<p>The iOS native code in <code>SpeechController.swift</code> handles:</p>
+<ol>
+<li><strong>Audio Session Management</strong>: Configures <code>AVAudioSession</code> for recording</li>
+<li><strong>Audio Engine</strong>: Uses <code>AVAudioEngine</code> to capture microphone input</li>
+<li><strong>Voice Activity Detection (VAD)</strong>: Detects speech vs silence using Sherpa-ONNX VAD</li>
+<li><strong>Speech Recognition</strong>: Processes audio with Sherpa-ONNX ASR model</li>
+</ol>
+<pre class="language-swift"><code class="language-swift">// iOS: Registering the plugin
+public static func register(with registrar: FlutterPluginRegistrar) {
+    let channel = FlutterMethodChannel(
+        name: "com.bookbot/control",
+        binaryMessenger: messenger
+    )
+    registrar.addMethodCallDelegate(instance, channel: channel)
+    
+    let eventChannel = FlutterEventChannel(
+        name: "com.bookbot/event",
+        binaryMessenger: messenger
+    )
+    eventChannel.setStreamHandler(instance)
+}
+
+// iOS: Handling method calls from Flutter
+public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+    switch call.method {
+    case "initSpeech":
+        initSpeech(profileId: profileId, language: language, ...)
+    case "listen":
+        startListening()
+    case "stopListening":
+        stopListening()
+    // ... other methods
+    }
+}
+
+// iOS: Processing audio buffers
+engine.inputNode.installTap(onBus: 0, bufferSize: bufferSize, format: format) { buffer, _ in
+    self.recognize(buffer: buffer)
+}
+</code></pre>
+<h3 id="speech-recognition-flow">Speech Recognition Flow</h3>
+<pre class="language-dart"><code>┌─────────────────────────────────────────────────────────────────┐
+│                        Flutter App (Dart)                        │
+│  ┌───────────────────────────────────────────────────────────┐  │
+│  │          SpeechController.shared.listen()                 │  │
+│  └───────────────────────┬───────────────────────────────────┘  │
+└────────────────────────────┼─────────────────────────────────────┘
+                             │ Method Channel
+                             ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                  Native Platform (Android/iOS)                   │
+│  ┌───────────────────────────────────────────────────────────┐  │
+│  │  1. Request Microphone Permission                         │  │
+│  │  2. Initialize AVAudioEngine/AudioRecord                  │  │
+│  │  3. Load Sherpa-ONNX ASR Model                           │  │
+│  │  4. Start Capturing Audio (100ms buffers)                │  │
+│  └───────────────────────┬───────────────────────────────────┘  │
+│                          │                                       │
+│  ┌───────────────────────▼───────────────────────────────────┐  │
+│  │  Audio Buffer Processing:                                 │  │
+│  │  • Convert to 16kHz PCM Float32                          │  │
+│  │  • Run Voice Activity Detection (VAD)                    │  │
+│  │  • Feed to Sherpa-ONNX Recognizer                        │  │
+│  │  • Decode Speech → Text                                  │  │
+│  └───────────────────────┬───────────────────────────────────┘  │
+│                          │ Event Channel                        │
+└────────────────────────────┼─────────────────────────────────────┘
+                             ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    Flutter App (Dart)                            │
+│  ┌───────────────────────────────────────────────────────────┐  │
+│  │  Receive Results: { transcript, wasEndpoint, ... }        │  │
+│  │  Update UI with recognized text                           │  │
+│  └───────────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="key-technical-details">Key Technical Details</h3>
+<ol>
+<li>
+<p><strong>Audio Processing</strong>:</p>
+<ul>
+<li>Microphone captures raw audio at native sample rate (typically 48kHz)</li>
+<li>Audio is resampled to 16kHz for ASR model compatibility</li>
+<li>Buffer duration: 100ms for optimal latency</li>
+</ul>
+</li>
+<li>
+<p><strong>Voice Activity Detection (VAD)</strong>:</p>
+<ul>
+<li>Uses Silero VAD model with 25ms window size</li>
+<li>Detects speech/silence patterns: <code>[silence][speech][silence]</code></li>
+<li>Patience counters prevent false endpoint detection</li>
+</ul>
+</li>
+<li>
+<p><strong>Recognition Modes</strong>:</p>
+<ul>
+<li><strong>Phoneme Mode</strong>: Returns phonetic tokens for pronunciation analysis</li>
+<li><strong>Word Mode</strong>: Returns complete words for text transcription</li>
+</ul>
+</li>
+<li>
+<p><strong>Thread Safety</strong>:</p>
+<ul>
+<li>Android: Uses coroutines and synchronized blocks</li>
+<li>iOS: Uses dedicated DispatchQueues for recognition, audio, and level processing</li>
+</ul>
+</li>
+</ol>
+</section>
+
+
+      <section class="summary">
+          <h2>Libraries</h2>
+        <dl>
+          <dt id="app">
+  <span class="name"><a href="app/">app</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="app_logger">
+  <span class="name"><a href="app_logger/">app_logger</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="main">
+  <span class="name"><a href="main/">main</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="speech_recognizer">
+  <span class="name"><a href="speech_recognizer/">speech_recognizer</a></span> 
+
+</dt>
+<dd>Speech recognition library for Flutter applications.
+</dd>
+
+        </dl>
+      </section>
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li class="self-crumb">speech_recognizer package</li>
+</ol>
+
+    <h5 class="hidden-xs"><span class="package-name">speech_recognizer</span> <span class="package-kind">package</span></h5>
+    <ol>
+      <li class="section-title">Libraries</li>
+      <li><a href="app/">app</a></li>
+      <li><a href="app_logger/">app_logger</a></li>
+      <li><a href="main/">main</a></li>
+      <li><a href="speech_recognizer/">speech_recognizer</a></li>
+</ol>
+
+  </div>
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div>
+</main>
+<footer>
+  <span class="no-break">
+    speech_recognizer
+      1.0.0+1
+  </span>
+  
+</footer>
+
+
+<script src="static-assets/highlight.pack.js?v1"></script>
+<script src="static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+
